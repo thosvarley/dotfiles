@@ -36,50 +36,50 @@
           "format" = "{:%e %B %H:%M}";
         };
         "cpu" = {
-          "format" = "{usage}% ";
+		"format" = "{usage}% ";
           "tooltip" = false;
         };
         "memory" = {
-          "format" = "{}% ";
+		"format" = "{}% ";
         };
         "backlight" = {
           "format" = "{percent}% {icon}";
-          "format-icons" = [ "" "" "" "" "" "" "" "" "" ];
+	  "format-icons" = [ "" "" "" "" "" "" "" "" "" ];
         };
         "battery" = {
           "states" = {
             "warning" = 30;
             "critical" = 15;
           };
-          "format" = "{capacity}% {icon}";
-          "format-charging" = "{capacity}% ";
-          "format-plugged" = "{capacity}% ";
-          "format-alt" = "{time} {icon}";
-          "format-icons" = [ "" "" "" "" "" ];
+	  "format" = "{capacity}% {icon}";
+	  "format-charging" = "{capacity}% ";
+	  "format-plugged" = "{capacity}% ";
+	  "format-alt" = "{time} {icon}";
+	  "format-icons" = [ "" "" "" "" "" ];
         };
-        "network" = {
-          "format-wifi" = "";
-          "format-ethernet" = "";
-          "tooltip-format" = "{ifname} via {gwaddr} ";
-          "format-linked" = "";
-          "format-disconnected" = "⚠";
-          "format-alt" = "{ifname}: {ipaddr}/{cidr}";
-          "on-click" = "nm-connection-editor";
-        };
-        "pulseaudio" = {
-          "format" = "{volume}% {icon}";
-          "format-bluetooth" = "{volume}% {icon}";
-          "format-bluetooth-muted" = " {icon}";
-          "format-muted" = "";
-          "format-source" = "{volume}% ";
-          "format-source-muted" = "";
-          "format-icons" = {
-            "headphone" = "";
-            "phone" = "";
-            "portable" = "";
-            "car" = "";
-            "default" = [ "" "" "" ];
+	"network" = {
+            "format-wifi" = "";
+            "format-ethernet" = "";
+            "tooltip-format" = "{ifname} via {gwaddr} ";
+            "format-linked" = "";
+            "format-disconnected" = "⚠";
+            "format-alt" = "{ifname}: {ipaddr}/{cidr}";
+            "on-click" = "nm-connection-editor";
           };
+	            "pulseaudio" = {
+            "format" = "{volume}% {icon}";
+            "format-bluetooth" = "{volume}% {icon}";
+            "format-bluetooth-muted" = " {icon}";
+            "format-muted" = "";
+            "format-source" = "{volume}% ";
+            "format-source-muted" = "";
+            "format-icons" = {
+              "headphone" = "";
+              "phone" = "";
+              "portable" = "";
+              "car" = "";
+              "default" = [ "" "" "" ];
+            };
           "on-click" = "pavucontrol";
         };
         "bluetooth" = {
@@ -99,7 +99,7 @@
 
     style = ''
       window#waybar * {
-          font-family: Cantarell, 'Font Awesome 8 Free Solid', 'Font Awesome 8 Free';
+          font-family: Cantarell, 'Font Awesome 7 Free Solid', 'Font Awesome 7 Free';
           font-feature-settings: "tnum";
       }
       #bluetooth.off,
