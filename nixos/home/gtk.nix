@@ -3,8 +3,8 @@
   gtk = {
     enable = true;
     iconTheme = {
-      name = "Adwaita";
-      package = pkgs.adwaita-icon-theme;
+      name = "Numix-Circle";
+      package = pkgs.numix-icon-theme-circle;
     };
   };
 }
