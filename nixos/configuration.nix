@@ -195,6 +195,15 @@
   hardware.bluetooth.powerOnBoot = false;
   services.blueman.enable = true;
 
+  # Storage: prune old generations weekly instead of accumulating forever,
+  # dedupe identical files across store paths, and cap how many old
+  # generations clutter the systemd-boot menu.
+  nix.gc.automatic = true;
+  nix.gc.dates = "weekly";
+  nix.gc.options = "--delete-older-than 14d";
+  nix.settings.auto-optimise-store = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+
   # Python
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
