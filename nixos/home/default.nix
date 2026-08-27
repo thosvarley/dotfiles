@@ -12,5 +12,6 @@
     ./mako.nix
     ./niri.nix
     ./misc.nix
+    ./git.nix
   ];
 }

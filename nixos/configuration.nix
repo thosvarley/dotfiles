@@ -204,6 +204,9 @@
   nix.settings.auto-optimise-store = true;
   boot.loader.systemd-boot.configurationLimit = 10;
 
+  # Compressed RAM-backed swap as pressure insurance.
+  zramSwap.enable = true;
+
   # Python
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
