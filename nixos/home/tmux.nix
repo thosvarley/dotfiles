@@ -30,6 +30,13 @@
       bind -T copy-mode-vi C-j select-pane -D
       bind -T copy-mode-vi C-k select-pane -U
       bind -T copy-mode-vi C-l select-pane -R
+	
+	# Status Left
+	set -g status-left "#[fg=#{?client_prefix,red},bold]● #[bold]#S "
+	set -g status-left-length 31
+	# Status Right 
+      set -g status-right "#[bold]  #{pane_current_path} "
+	set -g status-right-length 61
     '';
   };
 }
