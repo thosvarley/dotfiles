@@ -4,6 +4,10 @@
 #
 { config, pkgs, ... }:
 
+let
+  niri-scratchpad =
+    (builtins.getFlake "path:${builtins.toString ./pkgs/niri-scratchpad}").packages.${pkgs.system}.default;
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -104,6 +108,7 @@
   tree-sitter
   wget
   yazi
+  niri-scratchpad
   # Rust-specific packages
   cargo
   rustc
@@ -194,6 +199,10 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = false;
   services.blueman.enable = true;
+
+  # Needed for builtins.getFlake, used to pull in ./pkgs/niri-scratchpad
+  # without converting the whole system to a flake-based config.
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Storage: prune old generations weekly instead of accumulating forever,
   # dedupe identical files across store paths, and cap how many old

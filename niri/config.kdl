@@ -6,6 +6,10 @@
 // Input device configuration.
 // Find the full list of options on the wiki:
 // https://yalter.github.io/niri/Configuration:-Input
+// Required by niri-scratchpad: all stashed (hidden) scratchpad windows
+// get moved here when toggled off.
+workspace "stash" { }
+
 input {
     keyboard {
         xkb {
@@ -344,6 +348,15 @@ window-rule {
     open-floating true
 }
 
+// Open KeePassXC floating so it materializes as an overlay next to the
+// active window rather than tiling into the layout. Paired with the
+// niri-scratchpad Mod+P bind below.
+window-rule {
+    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+    open-floating true
+    default-column-width { proportion 0.35; }
+}
+
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {
@@ -643,4 +656,11 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
+
+    // Toggle KeePassXC as a scratchpad: materializes it floating on the
+    // current workspace if hidden/not running, banishes it to the "stash"
+    // workspace if it's the focused window.
+    Mod+P hotkey-overlay-title="Toggle KeePassXC" {
+        spawn "niri-scratchpad" "target" "--spawn" "keepassxc" "appid" "org.keepassxc.KeePassXC";
+    }
 }
