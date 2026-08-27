@@ -104,6 +104,7 @@
       }
       #bluetooth.off,
       #bluetooth.disabled { opacity: 0.5; }
+      #clock { font-weight: bold; }
     '';
   };
 }
