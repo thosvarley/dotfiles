@@ -101,7 +101,9 @@
       window#waybar * {
           font-family: Cantarell, 'Font Awesome 7 Free Solid', 'Font Awesome 7 Free';
           font-feature-settings: "tnum";
-	  border-radius: 50px
+      }
+      window#waybar {
+          border-radius: 50px;
       }
       #bluetooth.off,
       #bluetooth.disabled { opacity: 0.5; }

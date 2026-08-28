@@ -310,6 +310,16 @@ animations {
     // slowdown 3.0
 }
 
+// GTK3 (waybar) reports its surface as fully opaque even with CSS
+// border-radius, so niri trusts that hint and fills the "transparent"
+// rounded corners with solid black instead of blending them. Forcing
+// opacity just under 1.0 makes niri actually blend, revealing the real
+// transparency. See: https://github.com/niri-wm/niri/issues/1872
+layer-rule {
+    match namespace="^waybar$"
+    opacity 0.99
+}
+
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Window-Rules
