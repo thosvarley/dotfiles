@@ -10,6 +10,8 @@
 // get moved here when toggled off.
 workspace "stash" { }
 
+workspace "main" { }
+
 input {
     keyboard {
         xkb {
@@ -188,7 +190,7 @@ layout {
         off
 
         width 4
-        active-color "#ffc87f"
+        active-color "#f7c87f"
         inactive-color "#505050"
 
         // Color of the border around windows that request your attention.
@@ -257,6 +259,11 @@ layout {
 // which may be more convenient to use.
 // See the binds section below for more spawn examples.
 
+// niri always focuses workspace index 1 at startup; switch to "main" right
+// away so we never sit on the empty "stash" workspace. A pure IPC call, so
+// it resolves before the startup terminal below even finishes spawning.
+spawn-at-startup "niri" "msg" "action" "focus-workspace" "main"
+
 // This line starts waybar, a commonly used bar for Wayland compositors.
 // Launched directly by niri (not systemd --user) — the systemd-managed
 // instance reliably rendered blank/white taskbar icons; a niri-spawned
@@ -270,6 +277,9 @@ spawn-at-startup "swaybg" "-i" "/home/thosvarley/Code/.dotfiles/backgrounds/kana
 
 // Notification daemon
 spawn-at-startup "mako"
+
+// Opens on "main" since that's what the focus-workspace call above landed us on.
+spawn-at-startup "alacritty"
 
 hotkey-overlay {
     // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
@@ -349,9 +359,10 @@ window-rule {
 	open-maximized false	
 }
 window-rule {
-	match app-id=r#"alacritty"#
-	open-maximized false	
+	match app-id="Alacritty"
+	open-maximized false
 }
+
 // Float matplotlib Qt figure windows (backend_qtagg titles them "Figure N")
 // so plotting from an iron.nvim/ipython REPL pops the figure up as an
 // overlay next to the editor instead of tiling into the layout.
