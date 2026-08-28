@@ -20,6 +20,7 @@
         };
         "wlr/taskbar" = {
           "format" = "{icon}";
+	  "spacing" = 3;
           "tooltip-format" = "{title} | {app_id}";
           "sort-by-app-id" = true;
           "on-click" = "activate";
@@ -96,7 +97,6 @@
         };
       };
     };
-
     style = ''
       window#waybar * {
           font-family: Cantarell, 'Font Awesome 7 Free Solid', 'Font Awesome 7 Free';
@@ -108,6 +108,14 @@
       #bluetooth.off,
       #bluetooth.disabled { opacity: 0.5; }
       #clock { font-weight: bold; }
+
+      /* Target the individual icon buttons inside the taskbar */
+      #taskbar button {
+          padding-left: 6px;   /* Inside padding around the icon */
+          padding-right: 6px;
+          margin-left: 2px;    /* External gap between individual app buttons */
+          margin-right: 2px;
+      }
     '';
   };
 }
