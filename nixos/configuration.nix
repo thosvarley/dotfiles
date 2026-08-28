@@ -101,8 +101,10 @@ in
   gh
   libreoffice
   poppler-utils # pdf previews
+  R
   signal-desktop
   slack
+  sunsetr
   swaybg
   swayidle
   tree-sitter
@@ -119,11 +121,16 @@ in
   gcc
   pkg-config
   clang-tools
-  # Python
-  python3
+  # Python — pyside6 pulled in here (rather than via uv/pip) so Nix bakes in
+  # its shared-lib RPATHs (libGL, libzstd, etc.) correctly. The venv has
+  # include-system-site-packages=true so it can still see it.
+  (python3.withPackages (ps: [ ps.pyside6 ]))
   stdenv.cc.cc.lib
   uv
   zlib
+  # Runtime shared libs that pip/uv-installed Qt/GUI wheels dlopen at import
+  # time to detect the display; not covered by the venv's PySide6 alone.
+  wayland
   # Lua
   stylua
   # R

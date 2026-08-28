@@ -342,10 +342,14 @@ window-rule {
 	match app-id=r#"alacritty"#
 	open-maximized false	
 }
+// Float matplotlib Qt figure windows (backend_qtagg titles them "Figure N")
+// so plotting from an iron.nvim/ipython REPL pops the figure up as an
+// overlay next to the editor instead of tiling into the layout.
 window-rule {
-    match app-id="python3"
-    match title="^Figure.*"  // or whatever the title pattern is
+    match app-id="python3" title=r#"^Figure \d+$"#
     open-floating true
+    open-focused true
+    default-column-width { proportion 0.4; }
 }
 
 // Open KeePassXC floating so it materializes as an overlay next to the
