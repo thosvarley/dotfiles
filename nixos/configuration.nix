@@ -100,6 +100,7 @@ in
   git
   gh
   libreoffice
+  niri-scratchpad
   poppler-utils # pdf previews
   R
   signal-desktop
@@ -110,7 +111,7 @@ in
   tree-sitter
   wget
   yazi
-  niri-scratchpad
+  zathura
   # Rust-specific packages
   cargo
   rustc
@@ -138,7 +139,12 @@ in
   # LaTeX
   texlab
   tex-fmt
-
+  # `texlive` bare is the whole texlive package-set attrset, not a
+  # derivation -- and on this channel evaluating it (via the dbus
+  # service-file scan over systemPackages) trips a nixpkgs typo bug
+  # (texlive/default.nix: `pygmentex = texlive.pkgs.pigmentex`, a
+  # misspelling of `pygmentex`). Use an actual combined scheme instead.
+  texlive.combined.scheme-medium
   ];
 
   # Fonts

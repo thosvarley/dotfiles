@@ -9,8 +9,9 @@
     extraConfig = ''
       unbind C-b
       set-option -g prefix M-m
-
       set-option -g status-position top
+
+      set-option -g pane-active-border-style "fg=#7fc8ff, bg=default"
 
       # Vertical split with prefix + |
       bind | split-window -h -c "#{pane_current_path}"
