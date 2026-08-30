@@ -278,6 +278,11 @@ spawn-at-startup "swaybg" "-i" "/home/thosvarley/Code/.dotfiles/backgrounds/kana
 // Notification daemon
 spawn-at-startup "mako"
 
+// Blue-light filter. -b backgrounds it so it doesn't block the startup
+// sequence; config lives at ~/.config/sunsetr/sunsetr.toml, symlinked to
+// ~/Code/.dotfiles/sunsetr/sunsetr.toml.
+spawn-at-startup "sunsetr" "-b"
+
 // Opens on "main" since that's what the focus-workspace call above landed us on.
 spawn-at-startup "alacritty"
 
