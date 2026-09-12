@@ -40,7 +40,6 @@ in
   home-manager.users."thosvarley" = import ./home/default.nix;
 
   networking.hostName = "nixos"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -95,12 +94,16 @@ in
   brightnessctl
   claude-code
   cryptsetup
+  fastfetch
   ffmpegthumbnailer # video thumbnails
   file
   git
   gh
   libreoffice
+  libsecret
   niri-scratchpad
+  nixd
+  nixfmt
   poppler-utils # pdf previews
   R
   signal-desktop
@@ -109,9 +112,13 @@ in
   swaybg
   swayidle
   tree-sitter
+  unzip
   wget
-  yazi
+  xwayland-satellite
   zathura
+  zip
+  zoom-us
+  zotero
   # Rust-specific packages
   cargo
   rustc

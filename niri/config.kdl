@@ -264,6 +264,13 @@ layout {
 // it resolves before the startup terminal below even finishes spawning.
 spawn-at-startup "niri" "msg" "action" "focus-workspace" "main"
 
+// X11 compatibility layer -- niri has no built-in Xwayland, so X11-only
+// apps (e.g. Zoom, which hardcodes the Qt xcb platform plugin and doesn't
+// reliably support native Wayland) get no $DISPLAY and crash without this.
+// Spawned first so DISPLAY is set in the session environment before
+// anything that might launch an X11 app later in the session.
+spawn-at-startup "xwayland-satellite"
+
 // This line starts waybar, a commonly used bar for Wayland compositors.
 // Launched directly by niri (not systemd --user) — the systemd-managed
 // instance reliably rendered blank/white taskbar icons; a niri-spawned
