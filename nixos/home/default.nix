@@ -7,9 +7,11 @@
     ./alacritty.nix
     ./tmux.nix
     ./fuzzel.nix
+    ./yazi.nix
     ./waybar.nix
     ./swaylock.nix
     ./mako.nix
+    ./battery-notify.nix
     ./niri.nix
     ./misc.nix
     ./git.nix

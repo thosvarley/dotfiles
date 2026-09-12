@@ -11,6 +11,11 @@
       set-option -g prefix M-m
       set-option -g status-position top
 
+      # Let image-protocol escape sequences (yazi's previews) pass through
+      # tmux to the real terminal instead of being swallowed.
+      set -g allow-passthrough on
+      set -as terminal-features ',alacritty:sixel'
+
       set-option -g pane-active-border-style "fg=#7fc8ff, bg=default"
 
       # Vertical split with prefix + |

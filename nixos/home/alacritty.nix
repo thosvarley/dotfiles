@@ -1,7 +1,11 @@
-{ ... }:
+{ pkgs, ... }:
 {
   programs.alacritty = {
     enable = true;
+    # Upstream alacritty ships with zero image-protocol support (no Sixel,
+    # no Kitty graphics) -- this is the real reason yazi's image/PDF previews
+    # render wrong. withGraphics swaps in ayosec/alacritty's Sixel fork.
+    package = pkgs.alacritty.override { withGraphics = true; };
     settings = {
       # Attach to the "default" tmux session, creating it if needed. Lives
       # here (not ~/.bashrc) so it only fires for actual terminal windows —
