@@ -7,6 +7,18 @@
 let
   niri-scratchpad =
     (builtins.getFlake "path:${builtins.toString ./pkgs/niri-scratchpad}").packages.${pkgs.system}.default;
+
+  # sadjow/claude-code-nix instead of nixpkgs' claude-code: this flake gets
+  # updated within hours of upstream releases (automated hourly checks),
+  # whereas nixpkgs' package lags behind by weeks.
+  claude-code-nix =
+    (builtins.getFlake "github:sadjow/claude-code-nix").packages.${pkgs.system}.default;
+
+  # Vulkan-backed llama.cpp: offloads to the Radeon 760M iGPU via RADV
+  # (Mesa's Vulkan driver, pulled in by hardware.graphics.enable below)
+  # instead of CPU-only BLAS. This is what actually uses the GPU for
+  # local model inference.
+  llama-cpp-vulkan = pkgs.llama-cpp.override { vulkanSupport = true; };
 in
 {
   imports =
@@ -14,6 +26,7 @@ in
       ./hardware-configuration.nix
       <home-manager/nixos>
       (import <stylix>).nixosModules.stylix
+      <nixos-hardware/framework/13-inch/7040-amd>
     ];
 
   # Bootloader.
@@ -48,8 +61,24 @@ in
   # Enable networking
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "America/New_York";
+  # Time zone follows the laptop: on each network up / connectivity change,
+  # ask ipinfo.io for the IP's time zone and apply it. (Replaced
+  # automatic-timezoned + geoclue: geoclue's WiFi scan fails at boot and its
+  # beacondb IP fallback misplaces some networks, e.g. a San Diego AT&T IP
+  # resolved to Atlanta -> Eastern time.) time.timeZone stays unset so
+  # timedatectl is allowed to change it.
+  networking.networkmanager.dispatcherScripts = [
+    {
+      type = "basic";
+      source = pkgs.writeShellScript "update-timezone" ''
+        case "$2" in up|connectivity-change) ;; *) exit 0 ;; esac
+        tz=$(${pkgs.curl}/bin/curl -fsS -m 10 https://ipinfo.io/timezone) || exit 0
+        [[ "$tz" =~ ^[A-Za-z_]+(/[A-Za-z0-9_+-]+)+$ ]] || exit 0
+        [ -f "${pkgs.tzdata}/share/zoneinfo/$tz" ] || exit 0
+        ${pkgs.systemd}/bin/timedatectl set-timezone "$tz"
+      '';
+    }
+  ];
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -88,20 +117,46 @@ in
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Grey instead of orange/yellow folders in Numix(-Circle). Numix has no
+  # colour option, so rewrite the folder palette in the SVGs: front, back,
+  # and the emblem colour on special folders (Music, Downloads, ...).
+  nixpkgs.overlays = [
+    (final: prev:
+      let
+        greyFolders = pkg: pkg.overrideAttrs (old: {
+          postInstall = (old.postInstall or "") + ''
+            { grep -rlZ -i --include='*.svg' -e '#f2bb64' -e '#ea9036' \
+                $out/share/icons || true; } \
+              | xargs -0 -r sed -i \
+                  -e 's/#f2bb64/#b0b0b0/gI' \
+                  -e 's/#ea9036/#8c8c8c/gI' \
+                  -e 's/#897757/#5c5c5c/gI'
+          '';
+        });
+      in {
+        numix-icon-theme = greyFolders prev.numix-icon-theme;
+        numix-icon-theme-circle = greyFolders prev.numix-icon-theme-circle;
+      })
+  ];
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   brightnessctl
-  claude-code
+  claude-code-nix
   cryptsetup
   fastfetch
   ffmpegthumbnailer # video thumbnails
   file
+  gimp-with-plugins
   git
   gh
+  # inkscape-with-extensions
   libreoffice
   libsecret
+  llama-cpp-vulkan
   niri-scratchpad
+  nodejs
   nixd
   nixfmt
   poppler-utils # pdf previews
@@ -171,6 +226,14 @@ in
   # For tmux and other XDG-aware tools.
   environment.sessionVariables.XDG_CONFIG_HOME = "$HOME/.config";
 
+  # eMudhra/emSign CA incident (Oct 2026): distrust the removed root until
+  # nixos-26.05's cacert catches up (3.126 still ships it), and make uv use
+  # the system store instead of its compiled-in roots (uv < 0.13.4 trusts
+  # it). Remove both once the channel has cacert/uv with the fix.
+  # https://discuss.python.org/t/109576
+  security.pki.caCertificateBlacklist = [ "emSign ECC Root CA - G3" ];
+  environment.sessionVariables.UV_SYSTEM_CERTS = "1";
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -185,6 +248,8 @@ in
   services.openssh.enable = true;
   services.xserver.enable = true;
   services.udisks2.enable = true;
+  # Trash, removable-drive mounting, MTP and network shares for Nemo.
+  services.gvfs.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
