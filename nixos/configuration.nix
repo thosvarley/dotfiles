@@ -8,6 +8,9 @@ let
   niri-scratchpad =
     (builtins.getFlake "path:${builtins.toString ./pkgs/niri-scratchpad}").packages.${pkgs.system}.default;
 
+  # reMarkable Connection Utility, built from the source tarball in ./pkgs/rcu
+  rcu = pkgs.callPackage ./pkgs/rcu { };
+
   # sadjow/claude-code-nix instead of nixpkgs' claude-code: this flake gets
   # updated within hours of upstream releases (automated hourly checks),
   # whereas nixpkgs' package lags behind by weeks.
@@ -109,6 +112,9 @@ in
     packages = with pkgs; [];
   };
 
+  # reMarkable recovery-mode USB access for RCU (uaccess rules shipped by the package)
+  services.udev.packages = [ rcu ];
+
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video $sys$devpath/brightness",
   RUN+="${pkgs.coreutils}/bin/chmod g+w $sys$devpath/brightness"
@@ -142,6 +148,9 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+  rcu # reMarkable Connection Utility
+  config.boot.kernelPackages.perf
+  pkgs.cargo-flamegraph   # optional: flame graph SVGs for you to look at
   brightnessctl
   claude-code-nix
   cryptsetup
@@ -159,6 +168,7 @@ in
   nodejs
   nixd
   nixfmt
+  pandoc
   poppler-utils # pdf previews
   R
   signal-desktop
@@ -168,6 +178,7 @@ in
   swayidle
   tree-sitter
   unzip
+  vlc
   wget
   xwayland-satellite
   zathura
@@ -206,7 +217,7 @@ in
   # service-file scan over systemPackages) trips a nixpkgs typo bug
   # (texlive/default.nix: `pygmentex = texlive.pkgs.pigmentex`, a
   # misspelling of `pygmentex`). Use an actual combined scheme instead.
-  texlive.combined.scheme-medium
+  pkgs.texlive.combined.scheme-full
   ];
 
   # Fonts

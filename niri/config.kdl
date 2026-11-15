@@ -394,6 +394,14 @@ window-rule {
     default-column-width { proportion 0.35; }
 }
 
+// Zoom's "Start Zoom AI" hover popup (from the toolbar's AI Companion
+// button) grabbed focus on open, which made Zoom close it, then the hover
+// reopened it -- a focus-flicker loop. Let it appear without taking focus.
+window-rule {
+    match app-id="^zoom$" title="^Start Zoom AI$"
+    open-focused false
+}
+
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {

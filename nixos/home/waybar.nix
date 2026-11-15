@@ -87,8 +87,8 @@
           "format" = "";
           "format-disabled" = "";
           "format-off" = "";
-          "format-connected" = " {device_alias}";
-          "format-connected-battery" = " {device_alias} {device_battery_percentage}%";
+          "format-connected" = "";
+          "format-connected-battery" = "";
           "tooltip-format" = "{controller_alias}\t{controller_address}";
           "tooltip-format-connected" = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
           "tooltip-format-enumerate-connected" = "{device_alias}\t{device_address}";
